@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Valuation & Strategic Disclosure Game</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="header">
+        <div>
+            <h1>AI Valuation & Strategic Disclosure</h1>
+            <p class="subtitle">
+                A strategic disclosure and capital-allocation experiment
+            </p>
+        </div>
+
+        <div class="badge">
+            Computational Microeconomics
+        </div>
+    </header>
+
+
+    <!-- INTRODUCTION -->
+
+    <section id="intro" class="card">
+
+        <h2>Welcome to the Game</h2>
+
+        <p>
+            You are participating in a simplified financial market where
+            firms disclose information to an AI valuation system and investors
+            use the AI's valuation when deciding how much to bid.
+        </p>
+
+        <div class="flow">
+
+            <div class="flow-item">
+                <strong>Firm</strong>
+                <span>Disclosure</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+                <strong>AI</strong>
+                <span>Valuation</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+                <strong>Investor</strong>
+                <span>Bid</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+                <strong>Allocation</strong>
+                <span>Capital</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+                <strong>Firm</strong>
+                <span>Performance</span>
+            </div>
+
+        </div>
+
+        <p class="research-note">
+            <strong>Research question:</strong>
+            When firms know how an AI evaluator scores their disclosures,
+            can a history-aware evaluator and an auction-based allocation
+            mechanism reduce strategic disclosure while preserving informative pricing?
+        </p>
+
+        <button onclick="startGame()">Start Game</button>
+
+    </section>
+
+
+    <!-- SETUP -->
+
+    <section id="setup" class="card hidden">
+
+        <h2>Game Setup</h2>
+
+        <p>
+            First choose the role you want to study.
+        </p>
+
+        <div class="role-grid">
+
+            <button class="role-button" onclick="chooseRole('investor')">
+                <span class="role-title">Investor</span>
+                <span class="role-description">
+                    Observe an AI valuation and private signal, then submit a bid.
+                </span>
+            </button>
+
+            <button class="role-button" onclick="chooseRole('firm')">
+                <span class="role-title">Firm</span>
+                <span class="role-description">
+                    Choose how much to strategically adjust your disclosure.
+                </span>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- INVESTOR GAME -->
+
+    <section id="investorGame" class="card hidden">
+
+        <div class="section-header">
+            <div>
+                <h2>Investor Decision</h2>
+                <p id="roundText">Round 1</p>
+            </div>
+
+            <div class="round-score">
+                Utility: <span id="investorUtility">0</span>
+            </div>
+        </div>
+
+
+        <div class="information-grid">
+
+            <div class="info-box">
+                <span>AI Evaluator</span>
+                <strong id="aiModeDisplay"></strong>
+            </div>
+
+            <div class="info-box">
+                <span>AI Valuation</span>
+                <strong id="aiValuation"></strong>
+            </div>
+
+            <div class="info-box private">
+                <span>Your Private Signal</span>
+                <strong id="privateSignal"></strong>
+            </div>
+
+            <div class="info-box">
+                <span>Available Shares</span>
+                <strong>1</strong>
+            </div>
+
+        </div>
+
+
+        <div class="decision-panel">
+
+            <h3>Your Decision</h3>
+
+            <p>
+                You observe the AI valuation and your private signal.
+                Submit your bid for the share.
+            </p>
+
+            <label for="bidInput">
+                Your bid
+            </label>
+
+            <div class="input-row">
+
+                <input
+                    id="bidInput"
+                    type="number"
+                    min="0"
+                    max="150"
+                    step="0.01"
+                    placeholder="Enter your bid"
+                >
+
+                <button onclick="submitInvestorBid()">
+                    Submit Bid
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div id="investorResult" class="result hidden"></div>
+
+        <div id="nextInvestorButton" class="next-button hidden">
+            <button onclick="nextInvestorRound()">
+                Continue
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- FIRM GAME -->
+
+    <section id="firmGame" class="card hidden">
+
+        <div class="section-header">
+            <div>
+                <h2>Firm Decision</h2>
+                <p id="firmRoundText">Round 1</p>
+            </div>
+
+            <div class="round-score">
+                Total profit: <span id="firmProfit">0</span>
+            </div>
+        </div>
+
+
+        <div class="information-grid">
+
+            <div class="info-box">
+                <span>True Firm Quality</span>
+                <strong id="trueQuality"></strong>
+            </div>
+
+            <div class="info-box">
+                <span>AI Evaluator</span>
+                <strong id="firmAiMode"></strong>
+            </div>
+
+            <div class="info-box">
+                <span>Manipulation Cost</span>
+                <strong id="manipulationCost"></strong>
+            </div>
+
+        </div>
+
+
+        <div class="decision-panel">
+
+            <h3>Choose Your Disclosure Strategy</h3>
+
+            <p>
+                You may strategically increase your disclosed quality.
+                Higher manipulation may increase the AI valuation,
+                but manipulation is costly.
+            </p>
+
+            <label for="manipulationInput">
+                Strategic manipulation
+            </label>
+
+            <div class="slider-container">
+
+                <input
+                    id="manipulationInput"
+                    type="range"
+                    min="0"
+                    max="20"
+                    step="0.1"
+                    value="0"
+                    oninput="updateManipulation()"
+                >
+
+                <div class="slider-value">
+                    <span id="manipulationValue">0.0</span>
+                </div>
+
+            </div>
+
+            <button onclick="submitFirmDecision()">
+                Submit Disclosure
+            </button>
+
+        </div>
+
+
+        <div id="firmResult" class="result hidden"></div>
+
+        <div id="nextFirmButton" class="next-button hidden">
+            <button onclick="nextFirmRound()">
+                Continue
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- MEMORY SETUP -->
+
+    <section id="memorySetup" class="card hidden">
+
+        <h2>AI Evaluator Design</h2>
+
+        <p>
+            Choose how the AI uses historical information.
+        </p>
+
+        <div class="memory-grid">
+
+            <button onclick="setMemoryMode('static')">
+                <strong>No Memory</strong>
+                <span>
+                    The AI evaluates the current disclosure only.
+                </span>
+            </button>
+
+            <button onclick="setMemoryMode('naive')">
+                <strong>Naive History</strong>
+                <span>
+                    The AI updates using previous firm performance,
+                    without correcting for capital effects.
+                </span>
+            </button>
+
+            <button onclick="setMemoryMode('purged')">
+                <strong>Capital-Purged History</strong>
+                <span>
+                    The AI removes the estimated effect of previous
+                    capital allocation before updating.
+                </span>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- SUMMARY -->
+
+    <section id="summary" class="card hidden">
+
+        <h2>Game Summary</h2>
+
+        <div id="summaryContent"></div>
+
+        <h3>Research Interpretation</h3>
+
+        <p>
+            The experiment studies whether strategic disclosure can be
+            rewarded by an AI-assisted capital-allocation system.
+            It also tests whether an evaluator that learns from historical
+            outcomes can accidentally learn from outcomes partly caused by
+            its own previous allocation decisions.
+        </p>
+
+        <div class="summary-grid">
+
+            <div>
+                <span>Average manipulation</span>
+                <strong id="summaryManipulation"></strong>
+            </div>
+
+            <div>
+                <span>Average AI valuation error</span>
+                <strong id="summaryAIError"></strong>
+            </div>
+
+            <div>
+                <span>Average allocation</span>
+                <strong id="summaryAllocation"></strong>
+            </div>
+
+            <div>
+                <span>Rounds played</span>
+                <strong id="summaryRounds"></strong>
+            </div>
+
+        </div>
+
+        <button onclick="restartGame()">
+            Play Again
+        </button>
+
+    </section>
+
+
+    <footer>
+
+        <p>
+            This game is a simplified research environment.
+            It is not investment advice and does not model all features
+            of real IPO markets.
+        </p>
+
+        <p>
+            Computational Microeconomics · PS2 Research Project
+        </p>
+
+    </footer>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
