@@ -17,42 +17,61 @@
 \newcommand{\CourseSession}{Autumn 2026 Session 1}
 \newcommand{\Instructor}{Professor Luyao Zhang}
 \newcommand{\TeamCode}{FP3}
-\newcommand{\SymposiumSession}{[Your assigned session]}
-\newcommand{\GitHubLink}{\url{https://github.com/[org]/[repo]} (release \texttt{[TAG]}, commit \texttt{[COMMIT\_SHA]})}
-\newcommand{\NotebookLink}{\url{https://colab.research.google.com/github/[org]/[repo]/blob/main/notebooks/PS2_demo.ipynb}}
-\newcommand{\HuggingFaceLink}{\url{https://huggingface.co/spaces/[user]/ai-valuation-desk}}
-\newcommand{\PosterLink}{\texttt{PS2-FP3-TeamName-A0-Poster.pdf}}
+
+\newcommand{\SymposiumSession}{September~28, 2:45--5:15 p.m., IB 2050}
+
+\newcommand{\GitHubLink}{\url{https://github.com/dku-comsci-econ206-Autumn2026/ps2-fp3}}
+
+\newcommand{\NotebookLink}{\url{https://colab.research.google.com/drive/11HK1McahmEDVwZfS208nEMeVkMAyVUil}}
+
+\newcommand{\HuggingFaceLink}{\url{https://huggingface.co/spaces/dku-comsci-econ206-2026/strategic-disclosure-game}}
+
+\newcommand{\PosterLink}{submitted separately as PPTX and PDF; no public URL}
 
 \newcommand{\coursemeta}{\noindent\textbf{Submission to:} \CourseNumber{} --- \CourseName.\\
 \textbf{Course session:} \CourseSession. \textbf{Team:} \TeamCode. \textbf{Symposium:} \SymposiumSession.\\
-\textbf{Course instructor:} \Instructor. \textbf{Assignment:} PS2 collaborative research proposal.\par\smallskip}
+\textbf{Course instructor:} \Instructor. \textbf{Assignment:} PS2 collaborative research proposal.\\
+\textbf{Artifacts:} GitHub: \GitHubLink. Colab: \NotebookLink. Hugging Face: \HuggingFaceLink. Poster: \PosterLink.\par\smallskip}
 
 \title{Learning from Its Own Footprint: Strategic Disclosure, Capital Feedback, and the Design of AI Valuation Rules in IPO Allocation}
 
 \author{Feiyu Li}
 \affiliation{\institution{Duke Kunshan University}\city{Kunshan}\country{China}}
 \email{feiyu.li@dukekunshan.edu.cn}
+
 \author{Xuantong Fu}
 \affiliation{\institution{Duke Kunshan University}\city{Kunshan}\country{China}}
 \email{xuantong.fu@dukekunshan.edu.cn}
+
 \renewcommand{\shortauthors}{Team \TeamCode}
 
 \newif\ifTeachingAnnotations
 \TeachingAnnotationsfalse
 
 \begin{document}
+
 \begin{teaserfigure}
 \captionsetup{skip=8pt}
 \centering
 \input{figures/ps2_teaser.tex}
+
 \caption{The loop this paper studies. The issuer manages the disclosure the rule reads; the rule's output affects capital allocation; capital changes realised outcomes; and those outcomes can enter the rule's later history. The current simulation reports a higher learned sensitivity and more manipulation under naive memory. Breaking the feedback requires variation in proceeds that is plausibly orthogonal to disclosure. Each lens below changes the analysis rather than merely labelling it.}
+
 \Description{A four-stage flow across the top: the issuer discloses d equals theta plus m at quadratic cost; the AI valuation rule publishes a public signal s; a uniform-price auction or bookbuilding sets the price and proceeds; and the realised outcome y equals theta plus rho times capital plus noise. A dashed arrow runs from the realised outcome back into the AI rule, marking the feedback loop in which the rule trains on outcomes its own pricing produced. A separate arrow marks the allocation shock psi entering the auction stage as the instrument that identifies the capital effect. Beneath sit three lens panels for game theory, social choice, and mechanism design, and a bar naming the three linked artifacts.}
+
 \label{fig:teaser}
 \end{teaserfigure}
-\maketitle\raggedbottom\coursemeta
+
+\maketitle
+\raggedbottom
+\coursemeta
 
 \input{sections/proposal}
+
 \clearpage
+
 \input{appendices/supporting}
+
 \input{references_manual}
+
 \end{document}
