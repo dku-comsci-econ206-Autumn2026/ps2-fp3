@@ -1,0 +1,141 @@
+\section*{Author Notes}
+\subsection*{Acknowledgements}
+\textbf{Course instructor: Professor Luyao Zhang.} We thank [peer reviewer names] for feedback to be recorded after the September~28 symposium and [discussant name] for questions about the identification assumptions. We build on published work by Lacker and Weinberg~\cite{lacker1989}, Crocker and Slemrod~\cite{crocker2007}, Cao, Jiang, Yang and Zhang~\cite{cao2023machine}, Benveniste and Spindt~\cite{benveniste1989}, Sherman~\cite{sherman2005}, Degeorge, Derrien and Womack~\cite{degeorge2007}, Perdomo et al.~\cite{perdomo2020}, Staiger and Stock~\cite{staiger1997}, and Logg, Minson and Moore~\cite{logg2019}; none of these authors was involved in this work. Software used or planned includes Python 3.11, NumPy, pandas, Matplotlib, and Gradio. The ACM \texttt{acmart} class and course template are used as provided. Generative AI assistance is disclosed in Appendix~A.1. Feedback or a program role does not imply coauthorship. The authors remain responsible for the proposal and remaining errors.
+
+\subsection*{Team and individual contributions}
+\textbf{Joint contribution.} We formulate a single feedback problem linking strategic disclosure, AI valuation, capital allocation, and subsequent AI learning. The common contribution is the design of a setting in which an issuer knows the evaluator, the evaluator's signal affects the auction outcome, capital changes the issuer's later performance, and that performance becomes part of the evaluator's history. This makes the evaluator's own allocation footprint an object of analysis rather than treating valuation and allocation as separate modules. The team jointly specifies the three connected questions, the strategic environment, the social-planner objectives, the auction comparison, and the computational/behavioral tests. The resulting argument is: game theory predicts disclosure and bidding responses; social choice defines the trade-off among informative pricing, allocative efficiency, and access; and mechanism design changes the allocation rule and therefore the information available for safe history-based calibration.
+
+\textbf{Feiyu Li (author 1).} \emph{Personal intellectual decision:} reframing the project around the joint design problem of an AI evaluator and a capital-allocation mechanism, with particular attention to the distinction between genuine firm quality and performance induced by capital allocated through the evaluator. \emph{Inspectable output:} the strategic-disclosure formulation, issuer-type specification, auction interface, behavioral-game design, and Sections~1, 2, 4, and 5. \emph{Verification and result:} independently re-ran the stated mechanism-by-memory comparison on seeds 42--46 and checked the sign and magnitude of the reported change in manipulation under naive historical learning. Feiyu also checked the investor-side interpretation of the public signal against the Bayesian benchmark. \emph{Connection:} this work connects the firm's disclosure incentive to the auction and to the behavioral test rather than treating them as separate examples. \emph{Next responsibility:} after symposium feedback, verify the final computational implementation against the behavioral interface and document any revision to the evaluator or auction assumptions.
+
+\textbf{Xuantong Fu (author 2).} \emph{Personal intellectual decision:} identifying the evaluator's own capital allocation as the source of a feedback/omitted-variable problem and making the allocation mechanism consequential for whether that footprint can be separated from true firm quality. \emph{Inspectable output:} the memory/update estimators, allocation-shock identification argument, auction comparison, bias decomposition, and supporting technical derivations in Section~3 and Appendix~A. \emph{Verification and result:} checked the analytic footprint component against the simulated allocation-induced outcome and verified the first-stage diagnostic used to decide whether capital-purged estimation is informative. \emph{Connection:} this identification work turns the auction comparison into part of the evaluator-design problem: a mechanism is useful not only because it allocates shares, but also because its variation determines what the evaluator can safely learn from. \emph{Next responsibility:} complete the robustness checks for the allocation-shock assumptions and report whether the proposed purging procedure remains valid under alternative signal and allocation parameters.
+
+\textbf{Documented cross-check.} Each author independently verifies a consequential component of the other's work. Feiyu checks the computational outputs and behavioral-interface mapping from a clean checkout; Xuantong recomputes the core manipulation, price-informativeness, and allocation-efficiency measures and checks that their interpretation matches the stated social objective. Both authors review the consistency of the theory, simulation, behavioral artifact, and paper before submission.
+
+\clearpage
+\section{Technical details and reproducibility}
+\textbf{Separating-equilibrium benchmark.} With $c(m)=m^2/2\gamma$ and a linear price response, the cost of increasing the report is convex. The single-crossing condition supports a separating benchmark in which the optimal manipulation is increasing in the evaluator's perceived sensitivity to disclosure. The exact expression used in the simulation is
+\begin{equation}
+m^\star=\gamma\, v\, n\,\lambda_P\,\big[\lambda\beta b+(1-\lambda)\kappa_0\big].
+\label{eq:br-app}
+\end{equation}
+This is the strategic link between evaluator design and disclosure cost; it is not interpreted as an empirical estimate of any real issuer.
+
+\textbf{Feedback decomposition.} The simulated learning problem can be written as
+\begin{equation}
+\hat b-b_{\text{true}}=\rho\,\frac{\operatorname{Cov}(k,d)}{\operatorname{Var}(d)}+R,
+\label{eq:bias-app}
+\end{equation}
+where the first term is the capital footprint targeted by the allocation-shock correction and $R$ collects remaining heterogeneity. In the current model the footprint is generated by the mechanism; therefore the correction is only as credible as the instrument assumptions. The unresolved residual is explicitly treated as a limitation and planned robustness target rather than as a solved empirical problem.
+
+\textbf{Language-independent pseudocode.}
+\begin{verbatim}
+for seed in {42,...,46}:
+    initialize issuer types and private signals
+    for issuer in sequential_IPOs:
+        choose disclosure d from strategic best response
+        compute public AI signal s from memory mode
+        collect investor bids from private + public information
+        P, allocation, psi <- run_auction(bids, mechanism)
+        k <- proceeds_per_share(P, psi)
+        y <- theta + rho*k + noise
+        update evaluator memory using mode
+aggregate RMSE, manipulation, allocation efficiency,
+price error, welfare, retail access, and bias diagnostics
+\end{verbatim}
+
+\textbf{Inputs and parameters.} The computational design uses $N=200$ issuers (10 cohorts $\times$ 20), 100 shares per offering, seeds 42--46, a two-cohort burn-in, $\sigma_\theta=1.0$, $\gamma=0.006$, $\sigma_\eta=0.5$, $\mu_0=8.5$, $\beta=0.60$, $\lambda=1.0$, and $\sigma_\varepsilon=0.8$. The investor pool contains 15 institutions ($\sigma_\xi=1.0$) and 35 retail investors ($\sigma_\xi=2.5$). The allocation-shock scale differs by mechanism. Full values should be maintained in the computational configuration file and echoed into the fresh-run record.
+
+\textbf{Metrics.} Primary outcomes are (i) manipulation, $\bar m$ and manipulation cost; (ii) price informativeness, measured by RMSE between the transaction price and the latent fundamental value; (iii) capital-allocation efficiency, measured by the relationship between capital and $\rho$; and (iv) evaluator feedback bias, $\hat b-b_{\text{true}}$, with its footprint decomposition. Secondary outcomes include retail allocation share, realised investor return, and the first-stage $F$ statistic for the allocation-shock correction.
+
+\textbf{Known limitations.} (1) $\rho$ is exogenous; the model does not solve a dynamic general-equilibrium problem. (2) Memory is cross-firm rather than cross-period, so the model is an abstraction of repeated calibration rather than a literal representation of seasoned issuance. (3) The AI is represented as a rule rather than as a strategic vendor with its own payoff. (4) Only one evaluator is modelled; competing valuation systems are left for future work. (5) The heterogeneity residual $R$ in Eq.~\eqref{eq:bias-app} is unresolved. (6) All data are synthetic; no claim is made about any real issuer. (7) Behavioral evidence is exploratory and cannot establish population-level investor behavior.
+
+\textbf{Actual versus planned evidence.} The numerical values currently labelled ``actual'' are outputs of the team's stated simulation design. They should remain labelled actual only after the code, seed list, and fresh-run record are checked from a clean checkout. The classroom/Hugging Face behavioral test, final poster, and post-symposium review response are planned or pending until those activities occur. No future activity is represented as completed here.
+
+\textbf{Fresh-run record.} GitHub commit \texttt{[COMMIT\_SHA]}, release \texttt{[TAG]}; notebook \texttt{notebooks/PS2\_demo.ipynb}; Space revision \texttt{[HF\_SHA]}; poster version \texttt{[POSTER\_VERSION]}. The final record should include the UTC timestamp, Python version, package versions, seed list, and the exact command used to regenerate the reported outputs.
+
+\subsection{AI-use disclosure}
+[Complete before submission. Record tool/model, date, purpose, significant prompts, suggestions accepted or rejected, human changes, and verification. The current project used generative AI for drafting and debugging only after the team had independently specified the research question, hypotheses, and core model. Any generated text or code must be checked by the human authors. If no generative AI was used for a component, state that explicitly.]
+
+\clearpage
+\section{Cumulative Intellectual Development}
+\textbf{Prior methodological starting point.} The project began from the course's strategic-disclosure setting. The PS2 revision adds a consequential allocation mechanism and a history-learning loop rather than treating the evaluator as a static scoring rule.
+
+\textbf{Revision path.} The key change was to make the evaluator's output affect capital allocation and then make realised performance feed back into the evaluator. This created a testable distinction between genuine information in disclosure and performance induced by the evaluator's own decisions. The auction comparison was then made part of the identification problem rather than a decorative application.
+
+\textbf{Intellectual consequence.} Asking whether the evaluator learns from outcomes it caused changed the central question from ``can firms manipulate the AI?'' to ``how should an evaluator learn when its own pricing changes the data-generating process?'' This change affects the strategic model, social objective, mechanism comparison, computational metrics, and behavioral interface.
+
+\section{Open-source and three-lens inspiration}
+\textbf{Strategic/game-theoretic foundation.} Harsanyi~\cite{harsanyi1968} supplies the incomplete-information equilibrium logic, while costly-state-falsification models~\cite{lacker1989,crocker2007} motivate strategic disclosure. These foundations lead us to model private issuer types, disclosure costs, sequential moves, and beliefs explicitly.
+
+\textbf{Social-choice foundation.} The social planner does not have a single objective. Informative prices, efficient allocation of scarce capital, disclosure costs, and access for retail investors can conflict. The project therefore treats welfare as a multi-objective design problem and reports the trade-off rather than collapsing it into one accuracy statistic.
+
+\textbf{Mechanism-design foundation.} Myerson~\cite{myerson1981} and the auction literature motivate comparing allocation/payment rules. The consequential design decision here is whether the mechanism creates usable variation in proceeds without changing the issuer's disclosure decision directly. This is why the auction comparison enters the evaluator-learning problem.
+
+\textbf{Computational and behavioral integration.} GitHub makes the simulation reconstructable; Hugging Face makes the behavioral assumption about investor reliance observable; the A0 poster must integrate the same question, evidence, limitations, and real-world case. Behavioral play is treated as a challenge test of the equilibrium benchmark, not as population validation.
+
+\section{Review response and revision record}
+\textbf{Review-ready status.} This working version is prepared for the September~28 symposium. No symposium review is represented as completed before the event.
+
+\begin{tabularx}{\columnwidth}{@{}p{1.1cm}Y@{}}\toprule
+\textbf{Source}&\textbf{Feedback, decision, location, rerun, result}\\\midrule
+Peer 1&[To complete after review: evidenced strength; priority concern; Keep/Revise/Investigate; changed section/file; verification; result.]\\
+Peer 2&[To complete after review.]\\
+Discussant&[To complete after review.]\\
+Instructor&[To complete after review.]\\\bottomrule
+\end{tabularx}
+
+\smallskip\noindent\textbf{Pre-specified challenge.} The exogeneity of the allocation shock $\psi$ is load-bearing. In the model it is imposed by construction; in an empirical application it would need independent justification because rationing or underwriter discretion could correlate with unobserved demand and quality. We therefore classify empirical validation of the instrument as \textbf{Investigate}, not as a demonstrated real-world result. The final response will record the post-symposium decision and the corresponding verification.
+
+\clearpage\onecolumn
+\section{Structured abstract and cumulative proposal map}\label{app:abstract}
+\par\medskip
+\begin{table}[H]
+\caption{Structured abstract, PS2.}
+\label{tab:abstract-map}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}p{0.25\textwidth}Y@{}}\toprule
+\textbf{Proposal element} & \textbf{Current statement / change} \\\midrule
+Background & Investors increasingly use automated valuation signals built from issuer disclosures. Strategic disclosure can distort what machine readers observe~\cite{cao2023machine}; costly-state-falsification models study such incentives under fixed rules~\cite{lacker1989,crocker2007}. The unresolved setting here is a rule that both evaluates and affects capital allocation, so its later training data can partly reflect its own decisions. \\
+Motivation and application & IPO-style capital allocation is used as a controlled mechanism-design environment. Stakeholders include issuers, institutional investors, retail investors, exchanges, regulators, and later issuers who inherit the evaluator's calibration. \\
+Three connected questions & \emph{Economics:} how does strategic disclosure respond to a known evaluator? \emph{Computation:} can evaluator learning separate true quality from allocation-induced performance? \emph{Behavior:} do investors remove predictable disclosure inflation from the public signal? \emph{Integrated:} how should evaluator design and allocation design be jointly chosen? \\
+Method and model assumptions & Private issuer types $(\theta,v,\rho)$; sequential disclosure, valuation, bidding, allocation, and outcome; PBE~\cite{harsanyi1968}; no-memory, naive-history, and capital-purged memory modes; uniform-price auction versus bookbuilding; 200 synthetic issuers and seeds 42--46. \\
+Results or expected results & \textbf{Current simulation output:} naive memory reports $\hat b=1.42$ versus $b_{\text{true}}=1.02$ and increases mean manipulation from 0.233 to 0.402 in the current run. Bookbuilding provides stronger allocation-shock variation in the reported simulation than the uniform-price condition. \textbf{Planned verification:} regenerate all values from a clean checkout and test robustness to alternative signal noise, allocation shocks, and heterogeneous capital productivity. \\
+Intellectual merits & The contribution is the feedback loop: the evaluator's signal affects capital, capital affects outcomes, and outcomes enter future calibration. The auction is consequential because its allocation variation determines whether that feedback can be separated from genuine disclosure information. \\
+Practical impacts & A possible design standard is to require an AI valuation rule that also allocates capital to disclose its calibration path and the evidence separating evaluator-induced outcomes from genuine quality. Benefits, risks, access constraints, and correction routes remain design hypotheses until validated on external data. \\
+Feedback received and revision made & The PS1/Week~4 starting point treated buyer behavior too mechanically. The PS2 revision makes investor bidding strategic and makes the auction consequential for both allocation and evaluator learning. The September~28 symposium is the next formal challenge point; its feedback will be recorded after the event rather than anticipated as completed. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\clearpage\twocolumn
+\section{PS2 extension record: auction, linked artifacts, poster, and symposium}
+\subsection{Auction laboratory record}
+\textbf{Rules, stated explicitly.} \emph{Uniform-price (M1).} Allocation: bids are sorted descending and accepted until the 100-share offering is exhausted. Payment: winners pay the lowest accepted price. Stopping: cumulative demand reaches the offering. \emph{Bookbuilding (M2).} Allocation: underwriter discretion with the current model assigning 85\% to institutions. Payment: the model uses an underwriter price with an 8\% discount to the precision-weighted institutional estimate. Stopping: close of the book. The analogy boundary is explicit: real IPO bookbuilding also involves certification, relationship, and allocation considerations not represented here.
+
+\begin{tabularx}{\columnwidth}{@{}p{1.45cm}Y@{}}\toprule
+\textbf{Treatment}&\textbf{Setting, prediction, current output, revision status}\\\midrule
+M1, no memory&Baseline. Predicted: anticipated disclosure inflation can be stripped from the public signal. Current output: RMSE 1.85, underpricing 7.1\%, retail share 54.6\%, waste 0.6\%.\\
+M1, naive history&Predicted: learning from the outcome history may amplify the perceived value of disclosure. Current output: $\hat b=1.42$, mean manipulation 0.402, waste 1.7\%.\\
+M1, purged history&Predicted: removing the capital footprint reduces feedback bias when the allocation shock is strong enough. Current output: first-stage $F=17$; this is a weak-instrument boundary case and is treated as a limitation rather than a success claim.\\
+M2, no memory&Baseline bookbuilding condition. Current output: RMSE 1.82, retail share 15.0\%, waste 0.6\%.\\
+M2, naive history&Current output: $\hat b=1.42$, mean manipulation 0.398, waste 1.6\%.\\
+M2, purged history&Predicted: stronger allocation discretion supplies more useful variation. Current output: first-stage $F=2354$ and lower reported feedback bias. Robustness verification remains required.\\
+Classroom/HF&Planned September~28 behavioral test: record game URL/version, settings, own signal/value, planned action, equilibrium prediction, actual bid/payment/utility/allocation, behavioral observation, and resulting revision.\\\bottomrule
+\end{tabularx}
+
+\smallskip\noindent\textbf{Behavioral observation to record.} The main test is whether players remove predictable disclosure inflation from the AI signal. Algorithm appreciation~\cite{logg2019} and simple anchoring make competing predictions about how the weight on the public signal changes when the evaluator's calibration status is disclosed. The result will be labelled exploratory.
+
+\subsection{Linked-artifact parity}
+\begin{tabularx}{\columnwidth}{@{}p{1.45cm}Y@{}}\toprule
+\textbf{Artifact}&\textbf{Parity check}\\\midrule
+GitHub&Must implement the same issuer types, disclosure best response, memory modes, auction rules, parameters, and seeds as the paper. A clean run must regenerate every reported numerical table.\\
+Hugging Face&Must expose the same decision setting used in the behavioral section: strategic disclosure, AI valuation, investor action, and allocation. The interface must not imply population-level behavioral validity.\\
+A0 poster&Must use the same research question, core model, auction comparison, verified numerical outputs, limitations, real-world case, and correction route as the paper.\\\bottomrule
+\end{tabularx}
+
+\subsection{Symposium and practical-impact record}
+\textbf{Presentation version.} Planned for September~28, 2026, IB 2050. Poster version and artifact revisions will be recorded after the working links are frozen.
+
+\textbf{Real-world case record.} The application is AI-assisted IPO/equity valuation and allocation. Affected stakeholders include genuine capital-constrained issuers, weaker issuers, institutional investors, retail investors, exchanges, regulators, and later issuers affected by the evaluator's history. Potential benefit: an auditable criterion for deciding when a valuation rule can safely learn from outcomes. Risk: a naive self-calibrated rule may look strong on backtests precisely because its errors track its own past allocations. Missing evidence: real issuance data with defensible allocation shocks. Correction route: publish the evaluator's calibration path, memory-update log, and identification diagnostics so an outside auditor can challenge the feedback assumption.
+
+\textbf{Final revision record.} To be completed after the symposium: for each consequential review comment, record Keep/Revise/Investigate, the section or artifact changed, the verification performed, and the resulting output.\

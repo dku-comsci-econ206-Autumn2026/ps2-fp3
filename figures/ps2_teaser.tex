@@ -1,0 +1,67 @@
+% PS2 teaser -- the feedback loop that defines this paper.
+% Coordinate system is in points; \resizebox scales it to \textwidth.
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1pt,y=1pt,font=\sffamily,>=Latex]
+\tikzset{
+  stage/.style={draw=CourseBlue,line width=1.0pt,rounded corners=3pt,
+                minimum width=200pt,minimum height=54pt,align=center,
+                text=CourseInk,fill=white,font=\fontsize{12}{14.5}\selectfont},
+  stagelab/.style={font=\bfseries\fontsize{11}{13}\selectfont,text=CourseBlue,align=center},
+  flow/.style={CourseBlue,line width=1.3pt,-{Latex[length=8pt]}},
+  loop/.style={CourseTeal,line width=1.6pt,-{Latex[length=9pt]},dashed},
+  instr/.style={CourseTeal,line width=1.3pt,-{Latex[length=8pt]}},
+  note/.style={font=\itshape\fontsize{11}{13.5}\selectfont,text=CourseTeal,align=center},
+  lens/.style={draw=CourseInk!35,line width=0.8pt,rounded corners=2pt,
+               minimum width=356pt,minimum height=40pt,align=left,
+               text=CourseInk,fill=CourseInk!3,font=\fontsize{10.5}{12.5}\selectfont},
+  synth/.style={draw=CourseTeal,line width=1.1pt,rounded corners=2pt,
+                minimum width=1128pt,minimum height=32pt,align=center,
+                text=CourseInk,fill=CourseTeal!4,font=\fontsize{11}{13}\selectfont}
+}
+
+% ---------- stage labels -------------------------------------------------
+\node[stagelab] at (130,272) {STAGE 1 \ \ Issuer};
+\node[stagelab] at (415,272) {STAGE 2 \ \ AI valuation rule};
+\node[stagelab] at (700,272) {STAGE 3--4 \ \ Allocation};
+\node[stagelab] at (1000,272) {STAGE 5 \ \ Realised outcome};
+
+% ---------- the four stages ---------------------------------------------
+\node[stage] (issuer)  at (130,234) {discloses $d=\theta+m$\\pays $m^{2}/2\gamma$};
+\node[stage] (rule)    at (415,234) {$s=(1-\beta)\mu_{0}+\beta\,(a+b(d+\eta))$\\public --- and the issuer knows it};
+\node[stage] (auction) at (700,234) {M1 uniform-price \ vs \ M2 bookbuilding\\price $P$, proceeds $k=P(1+\psi)$};
+\node[stage] (outcome) at (1000,234) {$y=\theta+\rho k+\varepsilon$\\audited, verifiable};
+
+\draw[flow] (issuer)--(rule);
+\draw[flow] (rule)--(auction);
+\draw[flow] (auction)--(outcome);
+
+% ---------- the loop: the outcome feeds the rule's own memory ------------
+\draw[loop] (outcome.south) to[out=-90,in=-90,looseness=0.5] (rule.south);
+\node[note] at (710,162)
+  {\textbf{the footprint:} part of $y$ is high \emph{because} the rule priced it high.\\
+   Naive memory books that as disclosure quality: $\hat b=1.42$ against a true $1.02$,
+   raising manipulation $+73\%$.};
+
+% ---------- the instrument ----------------------------------------------
+\draw[instr] (700,302)--(auction.north);
+\node[note,anchor=south] at (700,305)
+  {$\psi$ = rationing or underwriter discretion: moves $k$ but not $d$ $\;\Rightarrow\;$
+   the instrument that breaks the loop};
+
+% ---------- three lenses -------------------------------------------------
+\node[lens,anchor=west] (l1) at (12,100)
+  {\textbf{Game theory.} $m^{\star}\!\propto$ the rule's \emph{perceived} sensitivity, so\\
+   $H_{C}$ and $L$ manipulate alike but deserve capital differently.};
+\node[lens,anchor=west] (l2) at (398,100)
+  {\textbf{Social choice.} Pricing accuracy, allocative efficiency and\\
+   retail access conflict; later issuers bear the externality.};
+\node[lens,anchor=west] (l3) at (784,100)
+  {\textbf{Mechanism design.} $\beta$, transparency $\lambda$, memory mode ---\\
+   and the allocation rule decides if memory is identified at all.};
+
+% ---------- artifact bar -------------------------------------------------
+\node[synth] at (576,44)
+  {\textbf{One question, three artifacts.}\ \ GitHub: 200 issuers, $2\times4$ grid, one command, fresh-run record\ \
+   $\cdot$\ \ Hugging Face: do investors de-bias the public signal, or over-weight it?\ \
+   $\cdot$\ \ A0 poster: the claim, the STAR/Nasdaq case, and the correction route};
+\end{tikzpicture}}
