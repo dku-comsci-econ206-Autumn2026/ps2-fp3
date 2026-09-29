@@ -28,35 +28,38 @@ m_t^\star=\gamma v_t n\lambda_P[\lambda\beta b+(1-\lambda)\kappa_0].
 \end{equation}
 Thus revealing the evaluation rule changes behavior. The benchmark prediction is not that firms literally fool a fully rational evaluator: investors can anticipate average inflation. The economic cost can instead appear as resources spent to optimize for the machine.
 
+\textbf{Commitment and correction extension.} The PS1 feedback highlighted a second design choice: whether an evaluator is committed to an announced rule or can revise its rule after observing outcomes. We therefore interpret no-memory evaluation as the fixed-rule benchmark and history-aware evaluation as a revisable rule. A proposed accountability extension is an audit-triggered freeze: if forecast error is large and the allocation-footprint test indicates self-induced feedback, the evaluator's update is frozen and the last audited parameter is restored; repeated failures trigger human review. This correction rule is a planned design test, not a result of the current simulation.
+
 \textbf{Challenge test.} If a history-aware evaluator learns a larger $b$ from outcomes it partly caused, then the best response above increases even when fundamental quality has not changed. This creates a falsifiable prediction: naive history should increase manipulation relative to a no-memory baseline.
 
 \section{Social choice and design objective}
-The social planner does not simply maximize AI prediction accuracy. The relevant stakeholders are issuers, institutional investors, retail investors, exchanges/regulators, and later issuers who inherit the evaluator's calibration. We therefore track three competing objectives:
+The planner does not maximize AI accuracy alone. Stakeholders are issuers, institutional and retail investors, exchanges/regulators, and later issuers who inherit the calibration. We therefore track three objectives:
 \begin{enumerate}
-\item \textbf{Informative pricing:} minimize error between market price and latent fundamental value.
-\item \textbf{Allocative efficiency:} direct scarce capital toward firms with high social marginal product $\rho$.
+\item \textbf{Informative pricing:} minimize price error relative to latent fundamentals.
+\item \textbf{Allocative efficiency:} direct capital toward high $\rho$ firms.
 \item \textbf{Manipulation and access:} reduce disclosure-management waste while preserving meaningful retail participation.
 \end{enumerate}
-These objectives can conflict. A mechanism that produces strong institutional information may reduce retail access; a transparent evaluator may improve accountability while also making the target easier to manipulate. The project therefore reports a trade-off rather than a single ``best'' rule.
-
-The feedback loop also creates an intertemporal externality: one issuer's strategic disclosure can change the evaluator's future calibration for later issuers. A socially acceptable evaluator should therefore distinguish genuine information from performance induced by its own previous allocations.
+These can conflict: stronger institutional information may reduce retail access, while a transparent evaluator may improve accountability but make its target easier to optimize. The project reports the trade-off rather than a single ``best'' rule. Because one issuer's outcome can alter future calibration, the evaluator should separate genuine information from performance induced by its own prior allocations.
 
 \section{Mechanism design and auction comparison}
-The scarce resource is 100 shares in an IPO-style offering. We compare two consequential allocation rules. \textbf{M1: uniform-price auction} sorts price--quantity bids and allocates until shares are exhausted; winners pay the lowest accepted price. \textbf{M2: bookbuilding} uses investor indications and underwriter discretion, with the current model assigning 85\% of allocation to institutions and applying an 8\% pricing discount. These are deliberately different mechanisms, not two labels for the same rule.
+The scarce resource is 100 IPO shares. We compare two consequential rules. \textbf{M1: uniform-price auction} sorts price--quantity bids, allocates until shares are exhausted, and charges winners the lowest accepted price. \textbf{M2: bookbuilding} uses investor indications and underwriter discretion; the current model assigns 85\% of shares to institutions and applies an 8\% pricing discount. Real bookbuilding also contains certification and relationship effects not represented here.
 
-The key innovation is that the auction also creates variation in proceeds. Write the observed outcome as $y=\theta+\rho k+\varepsilon$. A naive learner that regresses outcome on disclosure obtains
+The auction also creates variation in proceeds. With
 \begin{equation}
-\hat b_{naive}=b_{true}+\rho\frac{\operatorname{Cov}(k,d)}{\operatorname{Var}(d)}+R,
+y=\theta+\rho k+\varepsilon,
 \end{equation}
-where the middle term is the evaluator's own capital footprint and $R$ captures remaining heterogeneity. We therefore compare three evaluator modes: \textbf{no memory}, \textbf{naive history}, and \textbf{capital-purged history}. The last uses allocation variation as an instrument for $k$ and is gated by a first-stage strength check.
-
-This makes mechanism design consequential. The question is not merely which auction raises more revenue. It is whether the allocation rule supplies enough credible variation to identify the feedback that the evaluator must remove before learning from outcomes. The analogy boundary is explicit: real bookbuilding also includes certification and relationship effects that our controlled model does not represent.
+a naive learner obtains
+\begin{equation}
+\hat b_{\rm naive}=b_{\rm true}+
+\rho\frac{\operatorname{Cov}(k,d)}{\operatorname{Var}(d)}+R,
+\end{equation}
+where the middle term is the evaluator's capital footprint and $R$ is remaining heterogeneity. We compare \textbf{no memory}, \textbf{naive history}, and \textbf{capital-purged history}; the last uses allocation variation as an instrument for $k$ and is gated by a first-stage strength check. Hence mechanism design matters not only for allocation, but for whether the feedback to be removed is identifiable.
 
 \section{Computational and behavioral test}
 The computational design uses 200 synthetic issuers, 10 cohorts, seeds 42--46, 100 shares per offering, 15 institutional and 35 retail investors, and the same disclosure, signal, memory, and auction rules described above. The primary outcomes are mean manipulation $\bar m$, price RMSE, capital-allocation efficiency, feedback bias $\hat b-b_{true}$, manipulation cost, retail allocation share, and the first-stage $F$ statistic.
 
-The current simulation reports, for example, $\hat b=1.42$ versus $b_{true}=1.02$ under naive memory and an increase in mean manipulation from 0.233 to 0.402. The current bookbuilding condition produces substantially stronger allocation-shock variation than the uniform-price condition. These are model outputs, not evidence about real issuers; all reported numbers must be regenerated from the final code and seed record before submission.
+The fresh simulation run reports a clear feedback pattern. Under uniform-price allocation, mean manipulation is 0.408 with no memory, 1.367 with naive history, and 1.277 with capital-purged history; price RMSE is 0.551, 30.328, and 26.478, respectively. Under bookbuilding, mean manipulation is 0.408, 0.921, and 1.002, while price RMSE is 0.776, 12.302, and 14.321. Feedback bias is also much larger under history-aware learning: 5.344 for naive history versus 0.461 with no memory under uniform-price allocation, and 2.012 versus 0.403 under bookbuilding. The capital-purged rule reduces bias relative to naive history under uniform-price allocation but not under bookbuilding, so the current simulation does not support a claim that purging reliably solves the feedback problem. These are synthetic model outputs, not evidence about real issuers.
 
-The behavioral artifact tests the equilibrium assumption that investors remove predictable disclosure inflation from the public AI signal. A competing explanation is anchoring or algorithm appreciation~\cite{logg2019}. Players therefore face the same strategic setting as the model and their implied weight on the public signal is compared with the Bayesian benchmark. Classroom/Hugging Face evidence is exploratory: it can challenge or qualify the behavioral assumption but cannot establish population-level investor behavior.
+The behavioral artifact tests the equilibrium assumption that investors remove predictable disclosure inflation from the public AI signal. A competing explanation is anchoring or algorithm appreciation~\cite{logg2019}. Because the peer-review record noted that completed sample size and treatment outcomes were not yet established, we now label the classroom/Hugging Face evidence explicitly as exploratory and do not use it to support a population-level behavioral claim. The final behavioral update should report completed $n$, treatment conditions, and the matched output before any stronger interpretation is made.
 
-\textbf{Integrated contribution.} Game theory predicts strategic disclosure; social choice defines the collective objectives and trade-offs; mechanism design changes the allocation rule and the information available for evaluator learning; computation tests the feedback mechanism; and behavioral play challenges the rational-investor benchmark. The practical implication is testable: any AI system that both evaluates and influences capital should expose enough of its calibration path and allocation footprint for an external auditor to distinguish genuine performance from performance it helped create.
+\textbf{Integrated contribution.} Game theory predicts strategic disclosure; social choice defines the collective objectives and trade-offs; mechanism design changes the allocation rule and the information available for evaluator learning; computation tests the feedback mechanism; and behavioral play challenges the rational-investor benchmark. The practical implication is testable: any AI system that both evaluates and influences capital should expose enough of its calibration path, allocation footprint, and error-correction history for an external auditor to distinguish genuine performance from performance it helped create.

@@ -18,11 +18,22 @@ This source is the revised version of the team proposal on **strategic disclosur
 ## Files
 - `main.tex` — metadata, authors, teaser, and document structure.
 - `sections/proposal.tex` — the two-page Sections 1–5.
-- `appendices/supporting.tex` — Author Notes, technical details, AI-use disclosure, cumulative development, review response, structured abstract, auction record, artifact parity, and practical-impact record.
+- `appendices/supporting.tex` — Author Notes, technical details, AI-use disclosure, cumulative development, formal response to feedback, structured abstract, auction record, artifact parity, and practical-impact record.
 - `references.bib` — source bibliography retained for reference/Overleaf editing.
 - `references_manual.tex` — compiled bibliography used by the current pdfLaTeX build.
 - `figures/ps2_teaser.tex` — TikZ research-design figure.
 - `acmart.cls`, `*.bst` — course template files.
 
-## Before final submission
-Replace the remaining team/session/artifact placeholders: team/session metadata, GitHub URL and commit/release, notebook URL, Hugging Face URL/version, poster version, reviewer names, and the AI-use disclosure. Do not label future symposium reviews or behavioral results as completed before they occur. Regenerate every numerical result from the final code and seed record and make sure the paper, GitHub, Hugging Face artifact, and poster use the same model and parameters.
+## Current computational synchronization
+
+The numerical results reported in the source are synchronized to the fresh Colab verification notebook:
+https://colab.research.google.com/drive/1o-t9W3shjHubzSBcB8QK6KYFumrJmEbh
+
+The five canonical Python files are not changed by this Overleaf revision. The current paper reports the fresh-run outputs for seeds 42--46, with two burn-in cohorts. The formal response map records Prof. Luyao Zhang's PS1 and collaborative-learning feedback, Han Zhang's accountability feedback, and the named peer reviews from Aaron Wang and Zhenning Wang.
+
+## Final consistency checks
+- `main.tex` records Symposium C (without a class time) and the current GitHub, Colab, and Hugging Face links.
+- `sections/proposal.tex` contains the two-page main proposal, including the fixed-versus-revisable evaluator distinction, the accountability/correction extension, and the bounded interpretation of behavioral evidence.
+- `appendices/supporting.tex` contains the named acknowledgements and the formal response map required by PS2.
+- The five canonical Python files and the Colab outputs remain the source of the reported numerical results; this Overleaf revision does not silently change those computational files.
+- Future work is explicitly labelled for endogenous allocation shocks, real-IPO replication, behavioral sample completion, and testing the accountability rule.
