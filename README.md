@@ -460,6 +460,8 @@ These are **synthetic simulation results**. They are not estimates from real IPO
 
 # Reproducibility
 
+**Final GitHub commit:** `b8a7ac63afeb58d9d7335a38dd1344c8edad57e7`
+
 The project uses five canonical seeds:
 
 ```text
