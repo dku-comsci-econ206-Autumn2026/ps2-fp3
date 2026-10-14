@@ -1,3 +1,11 @@
+![FP3 A0 research poster — Learning from Its Own Footprint](PS2-FP3-Team3-A0-Poster-preview.png)
+
+**Poster PDF:** [View or download the current A0 poster](PS2-FP3-Team3-A0-Poster.pdf)
+
+**Interactive artifact (Hugging Face):** https://huggingface.co/spaces/dku-comsci-econ206-2026/strategic-disclosure-game
+
+---
+
 # PS2-FP3: Strategic Disclosure, AI Valuation, and Capital Allocation
 
 ## Project overview
