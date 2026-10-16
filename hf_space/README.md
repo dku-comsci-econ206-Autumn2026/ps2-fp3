@@ -7,147 +7,102 @@ sdk: static
 pinned: false
 ---
 
-# AI Valuation & Strategic Disclosure Game
+# AI Valuation & Strategic Disclosure — behavioral companion to Team FP3
 
-This interactive game is a behavioral laboratory for a Computational Microeconomics PS2 research project.
+**COMSCI/ECON 206 Computational Microeconomics · Autumn 2026 · Team FP3**
+Feiyu Li · Xuantong Fu · Instructor: Prof. Luyao Zhang
+Paper and code: https://github.com/dku-comsci-econ206-Autumn2026/ps2-fp3
 
-## Research Question
+## ⚠️ Evidence status
 
-When firms know how an AI evaluator scores their disclosures, can a history-aware evaluator and an auction-based capital-allocation mechanism reduce strategic disclosure while preserving informative pricing?
+**This Space is an exploratory classroom instrument, not an experiment.**
+Completed sample size and matched treatment outputs are not established. Nothing observed
+here is used to support a population-level claim about investor behavior, and no result
+from this Space appears as evidence in the paper's Results section. It exists to make one
+modelling assumption *inspectable*, and to let a reader feel the decision the model
+attributes to investors.
 
-## Economic Environment
+## The question the paper asks
 
-The game studies the following feedback loop:
+> **When may an AI valuation rule safely revise itself from outcomes it helped cause —
+> and does the allocation mechanism decide whether that condition can hold?**
 
-Firm
-→ Strategic Disclosure
-→ AI Valuation
-→ Investor Bid
-→ Capital Allocation
-→ Firm Performance
-→ AI Historical Learning
+## The assumption this Space probes
 
-The key research problem is that an AI evaluator may learn from outcomes that were partly caused by its own previous capital-allocation decisions.
+The paper's equilibrium rests on one behavioral assumption: that investors **strip the
+predictable inflation out of the public AI signal** before bidding. Formally, an investor
+forms
+
+```
+E[θ | s] = (invert the published rule) − (the average manipulation they expect)
+```
+
+and then precision-weights that against their own private signal. If real players instead
+anchor on the headline score — *algorithm appreciation*, Logg, Minson & Moore (2019) —
+then the model's claim that "no investor is fooled on average" is too generous, and the
+welfare cost of strategic disclosure is larger than the paper reports.
+
+The competing predictions are sharp:
+
+| | Prediction |
+|---|---|
+| **Equilibrium benchmark** | weight on the public signal falls as the evaluator's disclosure sensitivity rises |
+| **Algorithm appreciation / anchoring** | weight stays flat, or rises with the signal's confidence framing |
+
+What would have to be true to settle it: a pre-registered design, `n ≥ 200`, audit status
+disclosed as the treatment, and the weight on the public signal as the outcome. That study
+is item three of the paper's Future Research Roadmap. It has not been run.
+
+## The feedback loop you are inside
+
+```
+Firm → strategic disclosure → AI valuation → investor bid
+     → capital allocation → firm performance → AI retrains on that performance
+                                                        ↑
+                        part of the AI's evidence is its own earlier decision
+```
+
+In the paper's simulation, an evaluator that retrains naively on this loop roughly
+**doubles** strategic disclosure (mean manipulation 0.406 → 0.824 under uniform-price
+allocation, 20 seeds). The proposed fix is not accountability in general but
+**identification**: the rule may revise itself only while its own capital footprint is
+statistically identifiable (first-stage `F ≥ 10`), and is frozen otherwise. Gating on that
+condition cuts worst-case bias from 2.563 to 0.275.
 
 ## Roles
 
-### Investor
+**Investor.** Observes the AI valuation, a private signal and a competing bid, then bids.
+**Firm.** Observes its own quality and chooses how much to inflate its disclosure, at a
+quadratic cost.
 
-The investor observes:
+## AI evaluator modes
 
-- AI valuation
-- Private signal
-- Competing bid
+1. **No memory** — the committed rule; scores the current disclosure only.
+2. **Naive history** — learns from past performance without removing the effect of the
+   capital it previously allocated. This is the failure mode.
+3. **Capital-purged** — removes the estimated capital-induced component before learning.
+4. **Audited freeze** *(the paper's proposal)* — capital-purged, but permitted to publish
+   a revision only when its first stage is strong enough for that correction to be
+   identified; otherwise frozen at the last audited rule, resuming automatically once
+   identification returns.
 
-The investor then submits a bid.
+## Scope and boundary
 
-The game uses a simplified first-price allocation rule:
-
-- the highest bid wins;
-- the winner pays their own bid.
-
-### Firm
-
-The firm observes its underlying quality and chooses strategic manipulation of its disclosure.
-
-Higher manipulation may increase the AI valuation, but manipulation has a quadratic cost.
-
-## AI Evaluators
-
-The experiment compares three evaluator designs.
-
-### 1. No Memory
-
-The AI evaluates the current disclosure without using previous outcomes.
-
-### 2. Naive History
-
-The AI uses previous firm performance when updating its valuation.
-
-However, it does not remove the effect of previous capital allocation.
-
-This creates the central feedback problem:
-
-AI valuation
-→ capital
-→ firm performance
-→ AI learning
-
-### 3. Capital-Purged History
-
-The AI attempts to remove the estimated effect of previous capital before learning from historical performance.
-
-The adjustment is:
-
-performance − ρ × capital
-
-where ρ is the assumed productivity of capital.
-
-## Main Outcomes
-
-The game records:
-
-- true firm quality
-- strategic manipulation
-- disclosure
-- AI valuation
-- private signal
-- investor bid
-- competing bid
-- allocation
-- payment
-- capital
-- firm performance
-- utility
-- manipulation cost
-
-These outcomes correspond to the computational experiment described in the PS2 proposal.
-
-## Research Predictions
-
-### H1 — Strategic Disclosure
-
-Firms have an incentive to adjust disclosure when they know the AI evaluation rule.
-
-### H2 — Feedback Bias
-
-Naive historical learning can reinforce strategic disclosure because the AI may interpret capital-induced performance as evidence that its earlier valuation was correct.
-
-### H3 — Capital-Purged Learning
-
-Removing the estimated capital-induced component of historical performance should reduce feedback-driven evaluator bias.
-
-### H4 — Behavioral Departure
-
-Human investors may not behave exactly according to the theoretical benchmark and may place excessive weight on AI-generated valuations.
-
-## Important Simplifications
-
-This is a controlled experimental environment rather than a full model of real IPO markets.
-
-The game intentionally simplifies:
-
-- the number of investors
-- the number of shares
-- the auction
-- firm production
-- AI learning
-- investor information
-
-The purpose is to isolate the strategic interaction between disclosure, AI valuation, capital allocation, and historical learning.
+- All parameters are the paper's synthetic calibration. **No real issuer data.**
+- The allocation here is a simplification of the paper's uniform-price auction, in which
+  160 units of demand chase a 100-share offering and low bidders receive **zero**.
+- Real multi-unit bidders shade demand; this interface does not model that.
+- The game's single-winner rule is a teaching simplification and is *not* the mechanism
+  used for any number reported in the paper.
 
 ## Data
 
-At the end of an experiment, the player can export a CSV file containing the observed game history.
-
-The exported data can be used to compare:
-
-- theoretical predictions
-- computational simulations
-- human behavioral decisions
+The player can export a CSV of the session history (quality, manipulation, disclosure,
+AI valuation, private signal, bids, allocation, payment, capital, performance, utility,
+manipulation cost) to compare against the simulation. Treat any such comparison as
+illustrative.
 
 ## Disclaimer
 
-This is an academic research experiment.
-
-It is not investment advice and should not be interpreted as a recommendation to buy, sell, or hold any financial asset.
+Academic coursework. Not investment advice, and not a recommendation to buy, sell or hold
+any financial asset. MIT licence. AI assistance is disclosed in Appendix A.1 of the paper.

@@ -1,13 +1,25 @@
-\documentclass[sigconf,nonacm]{acmart}
+\documentclass[sigconf,nonacm,10pt]{acmart}
 \settopmatter{printacmref=false,printfolios=true}
 \setcopyright{none}
 \renewcommand\footnotetextcopyrightpermission[1]{}
-\usepackage{amsmath,tabularx,array,enumitem,balance,tikz,booktabs}
-\usepackage{float}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
-\definecolor{CourseBlue}{HTML}{315EFB}
+\usepackage{amsmath,tabularx,array,enumitem,balance,tikz,booktabs,graphicx,multirow}
+\usepackage{float,xurl}
+\geometry{a4paper,left=15mm,right=15mm,top=15mm,bottom=15mm}
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+
+% ---- course palette (retained from the PS2 feedback materials) ----------
+\definecolor{CourseBlue}{HTML}{315EFB}    % Strategic Thinking
+\definecolor{CourseViolet}{HTML}{9254F5}  % Interdisciplinary Contribution
+\definecolor{CourseTangerine}{HTML}{FF8A3D} % Global Leadership
 \definecolor{CourseTeal}{HTML}{14877D}
 \definecolor{CourseInk}{HTML}{18324A}
+\definecolor{SdgAmber}{HTML}{FD9D24}
+% ---- official UN SDG goal colours, used only if the icon PNGs are absent
+\definecolor{Sdg8}{HTML}{A21942}
+\definecolor{Sdg9}{HTML}{FD6925}
+\definecolor{Sdg16}{HTML}{00689D}
+
 \hypersetup{colorlinks=true,linkcolor=CourseBlue,citecolor=CourseTeal,urlcolor=CourseTeal}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \setlist{leftmargin=*,topsep=3pt,itemsep=2pt}
@@ -17,18 +29,18 @@
 \newcommand{\CourseSession}{Autumn 2026 Session 1}
 \newcommand{\Instructor}{Professor Luyao Zhang}
 \newcommand{\TeamCode}{FP3}
-\newcommand{\SymposiumSession}{September~28, 2:45--5:15 p.m., IB 2050}
+\newcommand{\SymposiumSession}{C}
+\newcommand{\TestedRelease}{\texttt{v1.0-final}, commit \FILL{SHA}}
 \newcommand{\GitHubLink}{\url{https://github.com/dku-comsci-econ206-Autumn2026/ps2-fp3}}
-\newcommand{\NotebookLink}{\url{https://colab.research.google.com/drive/11HK1McahmEDVwZfS208nEMeVkMAyVUil}}
+\newcommand{\NotebookLink}{\url{https://colab.research.google.com/drive/1o-t9W3shjHubzSBcB8QK6KYFumrJmEbh}}
 \newcommand{\HuggingFaceLink}{\url{https://huggingface.co/spaces/dku-comsci-econ206-2026/strategic-disclosure-game}}
-\newcommand{\PosterLink}{submitted separately as PPTX and PDF; no public URL}
+\newcommand{\PosterLink}{\url{https://github.com/dku-comsci-econ206-Autumn2026/ps2-fp3\#readme} (preview embedded, PDF linked)}
 
 \newcommand{\coursemeta}{\noindent\textbf{Submission to:} \CourseNumber{} --- \CourseName.\\
-\textbf{Course session:} \CourseSession. \textbf{Team:} \TeamCode. \textbf{Symposium:} \SymposiumSession.\\
-\textbf{Course instructor:} \Instructor. \textbf{Assignment:} PS2 collaborative research proposal.\\
-\textbf{Artifacts:} GitHub: \GitHubLink. Colab: \NotebookLink. Hugging Face: \HuggingFaceLink. Poster: \PosterLink.\par\smallskip}
+\textbf{Course session:} \CourseSession. \textbf{Team:} \TeamCode. \textbf{Symposium:} \SymposiumSession. \textbf{Final week:} October 12 and 14, 2026.\\
+\textbf{Course instructor:} \Instructor. \textbf{Assignment:} Final project revised research submission.\par\smallskip}
 
-\title{Learning from Its Own Footprint: Strategic Disclosure, Capital Feedback, and the Design of AI Valuation Rules in IPO Allocation}
+\title{Learning from Its Own Footprint: When May an AI Valuation Rule Revise Itself?}
 
 \author{Feiyu Li}
 \affiliation{\institution{Duke Kunshan University}\city{Kunshan}\country{China}}
@@ -38,22 +50,22 @@
 \email{xuantong.fu@dukekunshan.edu.cn}
 \renewcommand{\shortauthors}{Team \TeamCode}
 
+% Visible marker for facts only the authors can supply. Search for FILL.
+\newcommand{\FILL}[1]{\textcolor{red}{\textbf{[FILL: #1]}}}
 \newif\ifTeachingAnnotations
 \TeachingAnnotationsfalse
 
 \begin{document}
 \begin{teaserfigure}
-\captionsetup{skip=8pt}
+\captionsetup{skip=4pt}
 \centering
 \input{figures/ps2_teaser.tex}
-\caption{The loop this paper studies. The issuer manages the disclosure the rule reads; the rule's output affects capital allocation; capital changes realised outcomes; and those outcomes can enter the rule's later history. The current simulation reports a higher learned sensitivity and more manipulation under naive memory. Breaking the feedback requires variation in proceeds that is plausibly orthogonal to disclosure. Each lens below changes the analysis rather than merely labelling it.}
-\Description{A four-stage flow across the top: the issuer discloses d equals theta plus m at quadratic cost; the AI valuation rule publishes a public signal s; a uniform-price auction or bookbuilding sets the price and proceeds; and the realised outcome y equals theta plus rho times capital plus noise. A dashed arrow runs from the realised outcome back into the AI rule, marking the feedback loop in which the rule trains on outcomes its own pricing produced. A separate arrow marks the allocation shock psi entering the auction stage as the instrument that identifies the capital effect. Beneath sit three lens panels for game theory, social choice, and mechanism design, and a bar naming the three linked artifacts.}
+\caption{The loop we study and the gate we add: disclosure feeds the rule, the rule allocates scarce stock, capital changes outcomes, and outcomes re-enter its history. The gate permits revision only if first-stage $F\ge10$.}
+\Description{A five-stage flow across the top: the issuer discloses d equals theta plus m at quadratic cost; the AI valuation rule publishes a public signal s; a uniform-price auction or bookbuilding allocates 100 shares among 160 units of demand and sets the price and proceeds; and the realised outcome y equals theta plus rho times capital plus noise. A dashed arrow runs from the realised outcome back toward the AI rule but passes through an audit gate that only permits the update when the first-stage F statistic is at least ten, otherwise freezing the rule and restoring the last audited parameter. A separate arrow marks the greenshoe shock psi entering the allocation stage as the supply-side instrument. Beneath sit three lens panels for game theory, social choice, and mechanism design.}
 \label{fig:teaser}
 \end{teaserfigure}
 \maketitle\raggedbottom\coursemeta
 
 \input{sections/proposal}
-\clearpage
 \input{appendices/supporting}
-\input{references_manual}
 \end{document}
