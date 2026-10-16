@@ -1,6 +1,6 @@
-% PS2 teaser -- the feedback loop that defines this paper.
+% Final teaser -- the feedback loop, the instrument, and the audit gate.
 % Coordinate system is in points; \resizebox scales it to \textwidth.
-\resizebox{\textwidth}{!}{%
+\resizebox{0.9\textwidth}{!}{%
 \begin{tikzpicture}[x=1pt,y=1pt,font=\sffamily,>=Latex]
 \tikzset{
   stage/.style={draw=CourseBlue,line width=1.0pt,rounded corners=3pt,
@@ -10,6 +10,9 @@
   flow/.style={CourseBlue,line width=1.3pt,-{Latex[length=8pt]}},
   loop/.style={CourseTeal,line width=1.6pt,-{Latex[length=9pt]},dashed},
   instr/.style={CourseTeal,line width=1.3pt,-{Latex[length=8pt]}},
+  gate/.style={draw=CourseViolet,line width=1.2pt,rounded corners=3pt,
+               minimum width=186pt,minimum height=40pt,align=center,
+               text=CourseInk,fill=CourseViolet!8,font=\fontsize{11}{13}\selectfont},
   note/.style={font=\itshape\fontsize{11}{13.5}\selectfont,text=CourseTeal,align=center},
   lens/.style={draw=CourseInk!35,line width=0.8pt,rounded corners=2pt,
                minimum width=356pt,minimum height=40pt,align=left,
@@ -27,41 +30,37 @@
 
 % ---------- the four stages ---------------------------------------------
 \node[stage] (issuer)  at (130,234) {discloses $d=\theta+m$\\pays $m^{2}/2\gamma$};
-\node[stage] (rule)    at (415,234) {$s=(1-\beta)\mu_{0}+\beta\,(a+b(d+\eta))$\\public --- and the issuer knows it};
-\node[stage] (auction) at (700,234) {M1 uniform-price \ vs \ M2 bookbuilding\\price $P$, proceeds $k=P(1+\psi)$};
+\node[stage] (rule)    at (415,234) {$s=(1-\beta)\mu_{0}+\beta\,(a+\hat b(d+\eta))$\\public --- and the issuer knows it};
+\node[stage] (auction) at (700,234) {M1 uniform-price \ vs \ M2 bookbuilding\\160 units of demand chase 100 shares};
 \node[stage] (outcome) at (1000,234) {$y=\theta+\rho k+\varepsilon$\\audited, verifiable};
 
 \draw[flow] (issuer)--(rule);
 \draw[flow] (rule)--(auction);
 \draw[flow] (auction)--(outcome);
 
-% ---------- the loop: the outcome feeds the rule's own memory ------------
-\draw[loop] (outcome.south) to[out=-90,in=-90,looseness=0.5] (rule.south);
-\node[note] at (710,162)
+% ---------- the loop, now routed through an audit gate -------------------
+\draw[loop] (outcome.south) to[out=-90,in=0,looseness=0.7] (868,170);
+\node[gate] (gate) at (700,170) {\textbf{audit gate:} update only if $F\ge10$,\\else freeze and restore the committed rule};
+\draw[loop] (gate.west) to[out=180,in=-90,looseness=0.7] (rule.south);
+\node[note] at (330,150)
   {\textbf{the footprint:} part of $y$ is high \emph{because} the rule priced it high.\\
-   Naive memory books part of the allocation effect as disclosure quality: mean manipulation $1.367$ vs $0.408$
-   with no memory under uniform-price allocation; the capital-purged rule does not fully remove the bias.};
+   Naive memory books that as disclosure quality: $\bar m=0.824$ vs $0.406$ committed.};
 
 % ---------- the instrument ----------------------------------------------
 \draw[instr] (700,302)--(auction.north);
 \node[note,anchor=south] at (700,305)
-  {$\psi$ = rationing or underwriter discretion: moves $k$ but not $d$ $\;\Rightarrow\;$
-   the instrument that breaks the loop};
+  {$\psi$ = greenshoe over-allotment, set by the exchange: shifts the number of shares sold, not $d$
+   $\;\Rightarrow\;$ the supply shock that identifies the loop};
 
 % ---------- three lenses -------------------------------------------------
 \node[lens,anchor=west] (l1) at (12,100)
-  {\textbf{Game theory.} $m^{\star}\!\propto$ the rule's \emph{perceived} sensitivity, so\\
-   $H_{C}$ and $L$ manipulate alike but deserve capital differently.};
+  {\textbf{Game theory.} $m^{\star}\!\propto$ the rule's \emph{perceived} sensitivity $\hat b$,\\
+   so revising the rule moves every later issuer's report.};
 \node[lens,anchor=west] (l2) at (398,100)
   {\textbf{Social choice.} Pricing accuracy, allocative efficiency and\\
-   retail access conflict; later issuers bear the externality.};
+   retail access conflict; later issuers inherit the calibration.};
 \node[lens,anchor=west] (l3) at (784,100)
-  {\textbf{Mechanism design.} $\beta$, transparency $\lambda$, memory mode ---\\
-   and the allocation rule decides if memory is identified at all.};
+  {\textbf{Mechanism design.} The allocation rule decides whether the\\
+   evaluator's own footprint is identified --- and so whether it may learn.};
 
-% ---------- artifact bar -------------------------------------------------
-\node[synth] at (576,44)
-  {\textbf{One question, three artifacts.}\ \ GitHub: 200 issuers, $2\times3$ mechanism-by-memory grid, one command, fresh-run record\ \
-   $\cdot$\ \ Hugging Face: do investors de-bias the public signal, or over-weight it?\ \
-   $\cdot$\ \ A0 poster: the claim, real-world case, and correction route};
 \end{tikzpicture}}

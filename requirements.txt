@@ -1,3 +1,12 @@
-numpy
-pandas
-matplotlib
+# Core simulation and analysis (versions used for the frozen run)
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+
+# Poster tooling (tools/update_poster.py, tools/poster_preview.py)
+python-pptx>=1.0
+pillow>=10.0
+pymupdf>=1.23
+
+# Hugging Face Space (hf_space/)
+# gradio>=4.0
