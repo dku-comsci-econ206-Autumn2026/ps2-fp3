@@ -1,0 +1,67 @@
+{
+  "excludable": {
+    "baseline": {
+      "bid": 8.098640639450755,
+      "quantity": 2.0,
+      "clearing_price": 8.064817374910689,
+      "proceeds_k": 8.08687804878587,
+      "psi": 0.0027354213802547335,
+      "n_served": 31,
+      "training_label_y": 12.278638849166024
+    },
+    "raised": {
+      "bid": 9.098640639450755,
+      "quantity": 2.0,
+      "clearing_price": 8.064817374910689,
+      "proceeds_k": 8.08687804878587,
+      "psi": 0.0027354213802547335,
+      "n_served": 31,
+      "training_label_y": 12.278638849166024
+    },
+    "lowered": {
+      "bid": 7.098640639450755,
+      "quantity": 0.0,
+      "clearing_price": 8.06049934251678,
+      "proceeds_k": 8.08254820475383,
+      "psi": 0.0027354213802547335,
+      "n_served": 31,
+      "training_label_y": 12.276616364048843
+    }
+  },
+  "fixed_rationing": {
+    "baseline": {
+      "bid": 8.098640639450755,
+      "quantity": 2.0,
+      "clearing_price": 7.874618642701664,
+      "proceeds_k": 7.8961590428982635,
+      "psi": 0.0027354213802547335,
+      "n_served": 50,
+      "training_label_y": 12.18955334213232
+    },
+    "raised": {
+      "bid": 9.098640639450755,
+      "quantity": 2.0,
+      "clearing_price": 7.874618642701664,
+      "proceeds_k": 7.8961590428982635,
+      "psi": 0.0027354213802547335,
+      "n_served": 50,
+      "training_label_y": 12.18955334213232
+    },
+    "lowered": {
+      "bid": 7.098640639450755,
+      "quantity": 2.0,
+      "clearing_price": 7.098640639450755,
+      "proceeds_k": 7.118058412826654,
+      "psi": 0.0027354213802547335,
+      "n_served": 50,
+      "training_label_y": 11.826099847654575
+    }
+  },
+  "_meta": {
+    "investor_index": 22,
+    "is_retail": true,
+    "theta": 8.501230153357483,
+    "rho": 0.4671034573565339,
+    "note": "training_label_y = theta + rho*k, noise suppressed so the mechanical effect of the bid is visible."
+  }
+}

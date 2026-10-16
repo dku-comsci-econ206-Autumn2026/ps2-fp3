@@ -1,0 +1,100 @@
+{
+  "generated_utc": "2026-10-15T16:06:56.494786+00:00",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+  ],
+  "allocation_rules": [
+    "excludable",
+    "fixed_rationing"
+  ],
+  "memory_modes": [
+    "no_memory",
+    "naive_history",
+    "capital_purged",
+    "audited_freeze"
+  ],
+  "mechanisms": [
+    "uniform_price",
+    "bookbuilding"
+  ],
+  "config": {
+    "n_issuers": 200,
+    "n_cohorts": 10,
+    "issuers_per_cohort": 20,
+    "burn_in_cohorts": 2,
+    "shares": 100.0,
+    "gamma": 0.006,
+    "sigma_theta": 1.0,
+    "sigma_eta": 0.5,
+    "mu0": 8.5,
+    "beta": 0.6,
+    "lambda_": 1.0,
+    "sigma_epsilon": 0.8,
+    "n_institutional": 15,
+    "n_retail": 35,
+    "sigma_xi_institutional": 1.0,
+    "sigma_xi_retail": 2.5,
+    "b_true": 1.02,
+    "a": 0.0,
+    "lambda_P": 1.0,
+    "kappa0": 0.0,
+    "bookbuilding_institutional_share": 0.85,
+    "bookbuilding_discount": 0.08,
+    "v_mean": 2.2,
+    "v_sd": 0.4,
+    "rho_mean": 0.5,
+    "rho_sd": 0.12,
+    "psi_sd_uniform": 0.08,
+    "psi_sd_bookbuilding": 0.2,
+    "q_institutional": 6.0,
+    "q_retail": 2.0,
+    "allocation_rule": "excludable",
+    "first_stage_F_threshold": 10.0,
+    "min_audit_n": 40,
+    "b_hat_clip": 25.0
+  },
+  "derived": {
+    "total_demand": 160.0,
+    "coverage_ratio": 1.6,
+    "n_investors": 50
+  },
+  "python": "3.11.5",
+  "numpy": "1.24.3",
+  "pandas": "2.0.3",
+  "platform": "macOS-26.6.2-x86_64-i386-64bit",
+  "source_sha256_16": {
+    "src/auction.py": "b3a05fd237295ce1",
+    "src/evaluator.py": "84a02db4ecee83ab",
+    "src/make_figures.py": "932e9eda288bbd20",
+    "src/model.py": "c660741d96dbda07",
+    "src/robustness.py": "ece80a4fac0a19af",
+    "src/run_experiment.py": "a44f5d22f7729630",
+    "src/simulation.py": "8153776002f00c53"
+  },
+  "rows": 64000,
+  "notes": [
+    "Uncertainty is computed across seeds, the unit of independent replication.",
+    "first_stage_F_pooled is the textbook t^2 on psi in k ~ 1 + d + psi.",
+    "first_stage_F_legacy_mean reproduces the PS2 normalisation bug for audit.",
+    "All data are synthetic. No claim is made about any real issuer."
+  ]
+}
