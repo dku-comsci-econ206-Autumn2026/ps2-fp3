@@ -1,0 +1,19 @@
+{
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "placebo_lift_baseline_M1": 0.327624613269874,
+  "placebo_lift_rho0_M1": -0.019268583100154002,
+  "sign_robust_settings": 27,
+  "total_settings": 27,
+  "purge_helps_settings": 27
+}

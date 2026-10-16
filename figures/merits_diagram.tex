@@ -1,0 +1,73 @@
+% Intellectual Merits: annotated research/model diagram.
+% Separates INHERITED foundation (grey), our DISTINCT contribution (blue/violet)
+% and the SUPPORTING EVIDENCE that backs each contribution claim.
+\begin{tikzpicture}[
+  font=\scriptsize,
+  node distance=0pt,
+  box/.style={draw, rounded corners=1.2pt, align=center, inner sep=2.2pt,
+              minimum height=7.2mm, line width=0.4pt},
+  inherit/.style={box, fill=black!4, draw=black!35, text=black!75},
+  ours/.style={box, fill=CourseBlue!12, draw=CourseBlue, text=CourseInk,
+               line width=0.7pt},
+  evid/.style={box, fill=CourseTeal!10, draw=CourseTeal, text=CourseInk},
+  lbl/.style={align=left, font=\tiny\bfseries, text=black!55},
+  ar/.style={-{Stealth[length=1.6mm]}, line width=0.45pt, draw=black!55},
+  feed/.style={-{Stealth[length=1.6mm]}, line width=0.7pt, draw=CourseBlue,
+               dash pattern=on 1.4pt off 1.1pt},
+]
+
+% ---- row 1: inherited foundations ---------------------------------------
+\node[lbl] (l1) at (0,0) {INHERITED};
+\node[inherit, text width=22mm, anchor=north west] (f1) at (0,-2.6mm)
+  {Costly disclosure\\\cite{lacker1989,crocker2007,cao2023machine}};
+\node[inherit, text width=22mm, anchor=north west] (f2) at (24.5mm,-2.6mm)
+  {IPO allocation rules\\\cite{benveniste1989,sherman2005}};
+\node[inherit, text width=22mm, anchor=north west] (f3) at (49mm,-2.6mm)
+  {Performative prediction \cite{perdomo2020};\\strategic classification \cite{milli2019}};
+
+% ---- row 2: the model chain ---------------------------------------------
+\node[lbl, anchor=north west] (l2) at (0,-13mm) {OUR MODEL};
+\node[ours, text width=15mm, anchor=north west] (m1) at (0,-16mm)
+  {issuer\\$d=\theta+m$};
+\node[ours, text width=15mm, anchor=north west] (m2) at (18.5mm,-16mm)
+  {evaluator\\$s(\hat b)$};
+\node[ours, text width=15mm, anchor=north west] (m3) at (37mm,-16mm)
+  {auction\\$P,\,k$};
+\node[ours, text width=15mm, anchor=north west] (m4) at (55.5mm,-16mm)
+  {outcome\\$y=\theta{+}\rho k$};
+\foreach \a/\b in {m1/m2, m2/m3, m3/m4} \draw[ar] (\a) -- (\b);
+\draw[feed] (m4.south) -- ++(0,-2.6mm) -| (m2.south)
+  node[pos=0.25, below, font=\tiny, text=CourseBlue]
+  {the rule trains on outcomes its own pricing produced};
+
+% ---- row 3: distinct contribution + evidence ----------------------------
+\node[lbl, anchor=north west] (l3) at (0,-28mm) {DISTINCT CONTRIBUTION};
+\node[ours, text width=33mm, anchor=north west, fill=CourseViolet!12,
+      draw=CourseViolet] (c1) at (0,-31mm)
+  {\textbf{1. The allocation footprint}\\is identifiable only when the
+   mechanism supplies exogenous supply variation};
+\node[ours, text width=33mm, anchor=north west, fill=CourseViolet!12,
+      draw=CourseViolet] (c2) at (37mm,-31mm)
+  {\textbf{2. The first-stage $F$ is the audit statistic}: the right to
+   revise must be earned};
+
+\node[evid, text width=33mm, anchor=north west] (e1) at (0,-46mm)
+  {Evidence: instrument sweep, App.~A.4; placebo $\rho{=}0$ removes the
+   effect ($-4.8\%$ vs $+80.9\%$)};
+\node[evid, text width=33mm, anchor=north west] (e2) at (37mm,-46mm)
+  {Evidence: worst-case bias $0.275$ audited vs $2.563$ unaudited;
+   lock-in test, Tab.~\ref{tab:audit}};
+\node[box, fill=SdgAmber!18, draw=SdgAmber!90!black, text width=70mm,
+      anchor=north west, align=left, font=\scriptsize] (duet) at (0,-58mm)
+  {\textbf{Oct 12 duet test, Team FP4} \cite{cao2023machine,perdomo2020,milli2019}:
+   identification claim \textbf{survives}; welfare claim \textbf{revised} ---
+   \cite{milli2019} predicts a social burden and R9 finds it ($-13.1/35$ retail
+   served, $+4.2/15$ institutions).};
+\draw[ar] (e1.south) -- ++(0,-2mm) -| (duet.north);
+\draw[ar] (e2.south) -- ++(0,-2mm) -| (duet.north);
+\draw[ar] (c1) -- (e1);
+\draw[ar] (c2) -- (e2);
+\draw[ar, draw=black!30] (f1.south) -- ++(0,-2mm) -| (m1.north);
+\draw[ar, draw=black!30] (f2.south) -- ++(0,-2mm) -| (m3.north);
+\draw[ar, draw=black!30] (f3.south) -- ++(0,-2mm) -| (m4.north);
+\end{tikzpicture}
