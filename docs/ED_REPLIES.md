@@ -7,7 +7,7 @@ Post these as **two separate replies**, one from each account. The assignment re
 author to post their own response to classmates, and the two replies deliberately cover
 different points so they are not interchangeable.
 
-After posting, record the date in `appendices/supporting.tex` (search `edstem`).
+Posting record: the two replies are recorded in Appendix G as posted on 15 October 2026 (Feiyu Li) and 16 October 2026 (Xuantong Fu), according to the project record.
 
 ---
 
@@ -89,4 +89,24 @@ After posting, record the date in `appendices/supporting.tex` (search `edstem`).
 
 1. Note the posting date.
 2. In `appendices/supporting.tex`, search for `assigned responses` and replace the
-   `\FILL{...}` marker with the date and a one-line summary of each reply.
+   `Recorded in Appendix G: Feiyu Li replied on 15 October 2026 on the interaction and distributional-burden points; Xuantong Fu replied on 16 October 2026 on robustness and the evidence required for policy claims.` marker with the date and a one-line summary of each reply.
+
+
+---
+
+## 12 October Ed post — author-supplied record
+
+The authors supplied the following post content for the final project record. A direct URL for this particular post was not supplied, so this archive records the date and content without inventing a permalink.
+
+### Intellectual merits
+Closest paper: Juan C. Perdomo, Tijana Zrnic, Celestine Mendler-Dünner, and Moritz Hardt (2020), “Performative Prediction,” *Proceedings of the 37th International Conference on Machine Learning*, PMLR 119, 7599–7609. Official publication page: https://proceedings.mlr.press/v119/perdomo20a.html (no DOI is listed on that page).
+
+The project builds on the insight that predictions can change the outcomes they are intended to predict and jointly models strategic firm disclosure, an AI valuation rule that influences capital allocation, and an evaluator that learns from outcomes partly caused by its previous decisions. It compares evaluator memory modes and allocation mechanisms using mean manipulation, price RMSE, allocation efficiency, and feedback-bias diagnostics. The numerical evidence is synthetic; real IPO validation remains future work.
+
+### Practical impacts
+Potential stakeholders include issuing firms, institutional and retail investors, exchanges, and financial regulators. The post connects auditable AI valuation rules, documented calibration histories, and correction procedures to SDG 16, Target 16.6. Proposed indicators include strategic manipulation, price RMSE, allocation efficiency, feedback-bias diagnostics, and public audit/correction records. These are proposed evaluation measures, not demonstrated real-world impacts; current quantitative results are simulation-based.
+
+### Future research directions
+Proposed extensions include testing real IPO data and credible allocation shocks; repeated issuance, heterogeneous firms, and cross-market settings; competition between AI evaluators; and audit-triggered freezes, restoration of audited parameters, and human review.
+
+**Nobel frontier prediction:** growing recognition for the intersection of mechanism design, strategic information disclosure, and accountable AI decision-making, because consequential AI systems should learn from outcomes without reinforcing the effects of their own decisions.
